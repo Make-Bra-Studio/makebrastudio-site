@@ -1,0 +1,7 @@
+# app-ads.txt file for makebrastudio-site
+# This file is used for app monetization transparency
+# Format: DOMAIN, PUBLISHER_ID, RELATIONSHIP, CERTIFICATION_AUTHORITY_ID
+# 
+# Example entries (replace with actual values):
+# google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0
+# appnexus.com, 12345, RESELLER, f5ab79cb980f11d1
