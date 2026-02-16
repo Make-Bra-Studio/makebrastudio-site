@@ -1,7 +1,5 @@
 OWNERDOMAIN=makebrastudio.eu.org
 ironsrc.com, 640863, Direct
-Remember to replace the OwnerDomain Line with your domain. 
-Remember to replace [yourironSourcePublisherAccountID] with your account ID, which you can get from your account manager
 
 google.com, pub-5782449081814912, DIRECT, f08c47fec0942fa0
 blueseasx.com, 203625, RESELLER
