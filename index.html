@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Make Bra Studio — Mobile Games</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --yellow: #F5C842;
+      --dark: #0d0d0d;
+      --mid: #151515;
+      --card: #1a1a1a;
+      --border: #2a2a2a;
+      --text: #e8e8e8;
+      --muted: #888;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(13,13,13,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.12em;
+      color: var(--yellow);
+    }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--yellow); }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      padding-top: 80px;
+    }
+
+    /* puzzle tile background */
+    .puzzle-bg {
+      position: absolute; inset: 0;
+      z-index: 0;
+      opacity: 0.18;
+      background-image:
+        radial-gradient(circle at 20% 30%, #F5C842 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, #F5C842 0%, transparent 40%);
+    }
+    .puzzle-grid {
+      position: absolute; inset: 0; z-index: 0;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(6, 1fr);
+      gap: 2px;
+      opacity: 0.06;
+    }
+    .puzzle-cell {
+      border: 1px solid var(--yellow);
+      border-radius: 2px;
+    }
+
+    /* floating puzzle pieces */
+    .piece {
+      position: absolute;
+      z-index: 1;
+      opacity: 0.15;
+      animation: drift linear infinite;
+    }
+    .piece svg { fill: var(--yellow); }
+
+    @keyframes drift {
+      0%   { transform: translateY(0)   rotate(0deg); }
+      50%  { transform: translateY(-40px) rotate(180deg); }
+      100% { transform: translateY(0)   rotate(360deg); }
+    }
+
+    .hero-content { position: relative; z-index: 2; }
+
+    .hero-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 15vw, 13rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      background: linear-gradient(135deg, #fff 30%, var(--yellow) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.4s forwards;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-top: 1.8rem;
+      letter-spacing: 0.04em;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.6s forwards;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      margin-top: 2.8rem;
+      padding: 0.85rem 2.4rem;
+      border: 1.5px solid var(--yellow);
+      color: var(--yellow);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: background 0.25s, color 0.25s;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.8s forwards;
+    }
+    .hero-cta:hover { background: var(--yellow); color: var(--dark); }
+
+    .scroll-hint {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      z-index: 2;
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 1s 1.2s forwards;
+    }
+    .scroll-hint span {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.2em; color: var(--muted);
+    }
+    .scroll-bar {
+      width: 1px; height: 50px;
+      background: linear-gradient(to bottom, var(--yellow), transparent);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(24px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    /* ─── GAMES ─── */
+    .games-section {
+      padding: 7rem 3rem;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 0.6rem;
+    }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      letter-spacing: 0.04em;
+      margin-bottom: 4rem;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .game-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      position: relative;
+    }
+    .game-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--yellow);
+      box-shadow: 0 20px 60px rgba(245,200,66,0.12);
+    }
+
+    .game-art {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+      background: #111;
+    }
+    .game-art img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.5s;
+      filter: brightness(0.85);
+    }
+    .game-card:hover .game-art img { transform: scale(1.05); filter: brightness(1); }
+
+    .game-art-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, var(--card) 0%, transparent 60%);
+    }
+
+    .game-icon {
+      position: absolute; bottom: -22px; left: 1.4rem;
+      width: 52px; height: 52px; border-radius: 12px;
+      border: 2px solid var(--border);
+      overflow: hidden; background: #222;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .game-icon img { width: 100%; height: 100%; object-fit: cover; }
+
+    .game-body {
+      padding: 2.2rem 1.4rem 1.4rem;
+    }
+    .game-number {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--yellow);
+      margin-bottom: 0.4rem;
+    }
+    .game-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.7rem;
+      letter-spacing: 0.05em;
+      line-height: 1;
+      margin-bottom: 0.8rem;
+    }
+    .game-desc {
+      font-size: 0.83rem;
+      line-height: 1.65;
+      color: var(--muted);
+      margin-bottom: 1.4rem;
+    }
+    .game-tag {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      background: rgba(245,200,66,0.1);
+      border: 1px solid rgba(245,200,66,0.3);
+      border-radius: 2px;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      color: var(--yellow);
+      font-family: 'Space Mono', monospace;
+      text-transform: uppercase;
+      margin-right: 0.4rem;
+      margin-bottom: 0.4rem;
+    }
+    .game-link {
+      display: flex; align-items: center; gap: 0.5rem;
+      margin-top: 1.4rem;
+      padding: 0.65rem 1.2rem;
+      background: var(--yellow);
+      color: var(--dark);
+      text-decoration: none;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      width: fit-content;
+      transition: opacity 0.2s;
+    }
+    .game-link:hover { opacity: 0.85; }
+    .game-link svg { width: 14px; height: 14px; }
+
+    /* divider */
+    .divider {
+      width: 100%; height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+    }
+
+    /* ─── ABOUT STRIP ─── */
+    .about-strip {
+      padding: 5rem 3rem;
+      background: var(--mid);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .about-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    }
+    .about-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      letter-spacing: 0.04em;
+      line-height: 1;
+    }
+    .about-title em { color: var(--yellow); font-style: normal; }
+    .about-text {
+      font-size: 0.92rem;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+    .stats {
+      display: flex; gap: 3rem; margin-top: 2rem;
+    }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.6rem;
+      color: var(--yellow);
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--mid);
+      border-top: 1px solid var(--border);
+      padding: 4rem 3rem 2rem;
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto;
+    }
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr;
+      gap: 3rem; margin-bottom: 3rem;
+    }
+    .footer-brand .brand-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem; letter-spacing: 0.1em;
+      color: var(--yellow); margin-bottom: 0.8rem;
+    }
+    .footer-brand p {
+      font-size: 0.83rem; line-height: 1.7; color: var(--muted);
+      max-width: 280px;
+    }
+    .footer-col h4 {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--yellow);
+      margin-bottom: 1.2rem;
+    }
+    .footer-col a, .footer-col p {
+      display: block;
+      font-size: 0.83rem; color: var(--muted);
+      text-decoration: none; margin-bottom: 0.65rem;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--text); }
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-bottom p {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.1em; color: var(--muted);
+    }
+    .footer-bottom span { color: var(--yellow); }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .games-section { padding: 4rem 1.5rem; }
+      .about-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+      .stats { gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="nav-logo">Make Bra Studio</div>
+  <div class="nav-links">
+    <a href="#games">Our Games</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="puzzle-bg"></div>
+  <div class="puzzle-grid" aria-hidden="true">
+    <!-- 48 cells -->
+    <div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div>
+    <div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div>
+    <div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div>
+    <div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div>
+    <div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div>
+    <div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div><div class="puzzle-cell"></div>
+  </div>
+
+  <!-- floating pieces (SVG puzzle shapes) -->
+  <div class="piece" style="width:80px;top:15%;left:8%;animation-duration:9s;">
+    <svg viewBox="0 0 100 100"><path d="M20,20 h20 a10,10 0 0,1 20,0 h20 v20 a10,10 0 0,1 0,20 v20 h-20 a10,10 0 0,1 -20,0 h-20 v-20 a10,10 0 0,1 0,-20 z"/></svg>
+  </div>
+  <div class="piece" style="width:55px;top:65%;left:6%;animation-duration:12s;animation-delay:-3s;">
+    <svg viewBox="0 0 100 100"><path d="M20,20 h20 a10,10 0 0,1 20,0 h20 v20 a10,10 0 0,1 0,20 v20 h-20 a10,10 0 0,1 -20,0 h-20 v-20 a10,10 0 0,1 0,-20 z"/></svg>
+  </div>
+  <div class="piece" style="width:70px;top:25%;right:9%;animation-duration:10s;animation-delay:-5s;">
+    <svg viewBox="0 0 100 100"><path d="M20,20 h20 a10,10 0 0,1 20,0 h20 v20 a10,10 0 0,1 0,20 v20 h-20 a10,10 0 0,1 -20,0 h-20 v-20 a10,10 0 0,1 0,-20 z"/></svg>
+  </div>
+  <div class="piece" style="width:45px;top:72%;right:12%;animation-duration:14s;animation-delay:-7s;">
+    <svg viewBox="0 0 100 100"><path d="M20,20 h20 a10,10 0 0,1 20,0 h20 v20 a10,10 0 0,1 0,20 v20 h-20 a10,10 0 0,1 -20,0 h-20 v-20 a10,10 0 0,1 0,-20 z"/></svg>
+  </div>
+  <div class="piece" style="width:60px;top:45%;left:15%;animation-duration:11s;animation-delay:-2s;opacity:0.08;">
+    <svg viewBox="0 0 100 100"><path d="M20,20 h20 a10,10 0 0,1 20,0 h20 v20 a10,10 0 0,1 0,20 v20 h-20 a10,10 0 0,1 -20,0 h-20 v-20 a10,10 0 0,1 0,-20 z"/></svg>
+  </div>
+  <div class="piece" style="width:65px;top:40%;right:18%;animation-duration:13s;animation-delay:-9s;opacity:0.08;">
+    <svg viewBox="0 0 100 100"><path d="M20,20 h20 a10,10 0 0,1 20,0 h20 v20 a10,10 0 0,1 0,20 v20 h-20 a10,10 0 0,1 -20,0 h-20 v-20 a10,10 0 0,1 0,-20 z"/></svg>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Mobile Game Studio · Kharkiv, Ukraine</p>
+    <h1 class="hero-title">Make Bra<br>Studio</h1>
+    <p class="hero-sub">We craft puzzle experiences that challenge your mind<br>and tell stories worth exploring.</p>
+    <a href="#games" class="hero-cta">See Our Games</a>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-bar"></div>
+  </div>
+</section>
+
+<!-- ─── GAMES ─── -->
+<section class="games-section" id="games">
+  <p class="section-label">Our Portfolio</p>
+  <h2 class="section-title">Our Games</h2>
+
+  <div class="games-grid">
+
+    <!-- Game 1 -->
+    <div class="game-card">
+      <div class="game-art">
+        <img src="https://play-lh.googleusercontent.com/BD1k_ZkTv-o-LYvwQo9BQX5FRezMdJr6Jl0M6Bnq_tL47qArCTc-iQWhAwwvwe-3VEQ=w526-h296" alt="2020 Apocalypse Puzzle" loading="lazy" />
+        <div class="game-art-overlay"></div>
+        <div class="game-icon">
+          <img src="https://play-lh.googleusercontent.com/orPTJqJcA983o_rJpYO0O2Oi6tGU1Ei8npHt7063xn-hcPhpJ-jxwtYESwc4eJD2xLt1NmXateeq4H821UnjvA=w240-h480" alt="icon" />
+        </div>
+      </div>
+      <div class="game-body">
+        <p class="game-number">01 / 03</p>
+        <h3 class="game-name">2020: Apocalypse<br>Puzzle Block</h3>
+        <p class="game-desc">Dive into a flooded post-apocalyptic world. Clear paths through submerged cities, outsmart predators with limited bait, and reach the submarine before your oxygen runs out.</p>
+        <span class="game-tag">Puzzle</span>
+        <span class="game-tag">Strategy</span>
+        <span class="game-tag">Story</span>
+        <br/>
+        <a class="game-link" href="https://play.google.com/store/apps/details?id=com.MakeBraStudio.ApocalypsePuzzle" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.35.2.76.2 1.11.02L20.5 13.4l-3.66-3.66L3.18 23.76zm-.94-21.5C2.1 2.6 2 2.97 2 3.36v17.28c0 .39.1.76.24 1.1L14.8 9.18 2.24 2.26zM20.81 10.6L17.5 8.74 13.56 12l3.94 3.94 3.3-1.86A1.84 1.84 0 0 0 22 12.38a1.84 1.84 0 0 0-.99-1.62l-.2-.16zm-17.6-8.1l13.66 7.9L13.56 12l-11.3-8.92c.12-.27.28-.52.49-.7l.5.12z"/></svg>
+          Google Play
+        </a>
+      </div>
+    </div>
+
+    <!-- Game 2 -->
+    <div class="game-card">
+      <div class="game-art">
+        <img src="https://play-lh.googleusercontent.com/1dY6uxXsM10TGFi3H_0kJpK4qB5lwXxLtqwJpEWkM2mgw604_1zH939MUOkNizTlcBOL=s512" alt="Junkyard Master" loading="lazy" style="object-position:center top;" />
+        <div class="game-art-overlay"></div>
+        <div class="game-icon">
+          <img src="https://play-lh.googleusercontent.com/1dY6uxXsM10TGFi3H_0kJpK4qB5lwXxLtqwJpEWkM2mgw604_1zH939MUOkNizTlcBOL=s64" alt="icon" />
+        </div>
+      </div>
+      <div class="game-body">
+        <p class="game-number">02 / 03</p>
+        <h3 class="game-name">Junkyard<br>Master</h3>
+        <p class="game-desc">Run your own junkyard empire. Sort, salvage, and sell your way to the top. A satisfying mix of idle management and hands-on puzzle mechanics.</p>
+        <span class="game-tag">Idle</span>
+        <span class="game-tag">Management</span>
+        <span class="game-tag">Puzzle</span>
+        <br/>
+        <a class="game-link" href="https://play.google.com/store/apps/details?id=com.OneMillionBucks.JunkyardMaster" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.35.2.76.2 1.11.02L20.5 13.4l-3.66-3.66L3.18 23.76zm-.94-21.5C2.1 2.6 2 2.97 2 3.36v17.28c0 .39.1.76.24 1.1L14.8 9.18 2.24 2.26zM20.81 10.6L17.5 8.74 13.56 12l3.94 3.94 3.3-1.86A1.84 1.84 0 0 0 22 12.38a1.84 1.84 0 0 0-.99-1.62l-.2-.16zm-17.6-8.1l13.66 7.9L13.56 12l-11.3-8.92c.12-.27.28-.52.49-.7l.5.12z"/></svg>
+          Google Play
+        </a>
+      </div>
+    </div>
+
+    <!-- Game 3 -->
+    <div class="game-card">
+      <div class="game-art">
+        <img src="https://play-lh.googleusercontent.com/Q0RoQUmTunSV73_bcVmpHsUbcD3szin2a3pVFeYYd0rYIKigIu3QWLbGzILPvkPikQWP=s512" alt="Amaze Island Puzzle" loading="lazy" style="object-position:center top;" />
+        <div class="game-art-overlay"></div>
+        <div class="game-icon">
+          <img src="https://play-lh.googleusercontent.com/Q0RoQUmTunSV73_bcVmpHsUbcD3szin2a3pVFeYYd0rYIKigIu3QWLbGzILPvkPikQWP=s64" alt="icon" />
+        </div>
+      </div>
+      <div class="game-body">
+        <p class="game-number">03 / 03</p>
+        <h3 class="game-name">Amaze Island<br>Puzzle</h3>
+        <p class="game-desc">Explore a colorful island world full of mind-bending mazes and puzzles. A relaxing yet challenging experience for all ages.</p>
+        <span class="game-tag">Maze</span>
+        <span class="game-tag">Casual</span>
+        <span class="game-tag">Adventure</span>
+        <br/>
+        <a class="game-link" href="https://play.google.com/store/apps/details?id=com.OneMillionBucks.AmazeIsland" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.35.2.76.2 1.11.02L20.5 13.4l-3.66-3.66L3.18 23.76zm-.94-21.5C2.1 2.6 2 2.97 2 3.36v17.28c0 .39.1.76.24 1.1L14.8 9.18 2.24 2.26zM20.81 10.6L17.5 8.74 13.56 12l3.94 3.94 3.3-1.86A1.84 1.84 0 0 0 22 12.38a1.84 1.84 0 0 0-.99-1.62l-.2-.16zm-17.6-8.1l13.66 7.9L13.56 12l-11.3-8.92c.12-.27.28-.52.49-.7l.5.12z"/></svg>
+          Google Play
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── ABOUT ─── -->
+<section class="about-strip" id="about">
+  <div class="about-inner">
+    <div>
+      <h2 class="about-title">Small studio.<br><em>Big ideas.</em></h2>
+      <div class="stats">
+        <div>
+          <div class="stat-num">3</div>
+          <div class="stat-label">Games shipped</div>
+        </div>
+        <div>
+          <div class="stat-num">500+</div>
+          <div class="stat-label">Downloads</div>
+        </div>
+        <div>
+          <div class="stat-num">5.0★</div>
+          <div class="stat-label">Avg rating</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <p class="about-text">Make Bra Studio is an independent mobile game studio based in Kharkiv, Ukraine. We believe great puzzle games don't need complexity — they need heart, clever mechanics, and a world worth getting lost in. Every game we build is crafted with care, from first concept to final level.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── */
+<footer id="contact">
+  <div class="footer-inner">
+    <div class="footer-top">
+
+      <div class="footer-brand">
+        <div class="brand-name">Make Bra Studio</div>
+        <p>Independent mobile game studio crafting puzzle experiences from Kharkiv, Ukraine.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Games</h4>
+        <a href="https://play.google.com/store/apps/details?id=com.MakeBraStudio.ApocalypsePuzzle" target="_blank" rel="noopener">Apocalypse Puzzle</a>
+        <a href="https://play.google.com/store/apps/details?id=com.OneMillionBucks.JunkyardMaster" target="_blank" rel="noopener">Junkyard Master</a>
+        <a href="https://play.google.com/store/apps/details?id=com.OneMillionBucks.AmazeIsland" target="_blank" rel="noopener">Amaze Island Puzzle</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:makebra2020@gmail.com">makebra2020@gmail.com</a>
+        <a href="mailto:game2020makebra@gmail.com">game2020makebra@gmail.com</a>
+        <p>📍 Kharkiv, Ukraine</p>
+      </div>
+
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 <span>Make Bra Studio</span>. All rights reserved.</p>
+      <p>Made with 🧩 in Ukraine</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
