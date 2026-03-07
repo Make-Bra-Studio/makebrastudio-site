@@ -87,7 +87,8 @@
     }
     .hero-cta:hover { background: var(--yellow); color: var(--dark); }
     .scroll-hint {
-      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      position: absolute; bottom: 2.5rem;
+      left: 0; right: 0; margin: 0 auto; width: fit-content;
       z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
       opacity: 0; animation: fadeUp 1s 1.2s forwards;
     }
@@ -116,36 +117,37 @@
       overflow: hidden;
       display: flex; flex-direction: column;
       transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      /* Force GPU layer — eliminates sub-pixel ghost line on hover transform */
+      will-change: transform;
+      transform: translateZ(0);
     }
     .game-card:hover {
-      transform: translateY(-6px);
+      transform: translateY(-6px) translateZ(0);
       border-color: var(--yellow);
       box-shadow: 0 20px 60px rgba(245,200,66,0.12);
     }
 
-    /* FIX: prevent sub-pixel gap between image and overlay on hover */
+    /* FIX: prevent sub-pixel gap between image and content below */
     .game-art {
       position: relative; height: 190px;
       overflow: hidden; background: #111;
-      font-size: 0; line-height: 0; /* kills inline-block gap */
+      font-size: 0; line-height: 0;
     }
     .game-art img {
-      display: block; /* critical — removes baseline gap */
+      display: block;
       width: 100%; height: 100%; object-fit: cover;
       transition: transform 0.5s; filter: brightness(0.85);
     }
     .game-card:hover .game-art img { transform: scale(1.05); filter: brightness(1); }
 
-    /* Overlay: extends 2px below the art container to fully cover any sub-pixel gap */
     .game-art-overlay {
-      position: absolute; left: 0; right: 0;
-      top: 0; bottom: -2px; /* cover potential sub-pixel seam */
+      position: absolute; inset: 0;
       background: linear-gradient(to top, var(--card) 0%, transparent 55%);
       pointer-events: none;
     }
 
-    /* Icon sits cleanly below the banner */
-    .game-icon-wrap { padding: 1.2rem 1.4rem 0; }
+    /* Negative margin bridges the sub-pixel gap between art and icon */
+    .game-icon-wrap { padding: 1.2rem 1.4rem 0; margin-top: -1px; }
     .game-icon {
       width: 72px; height: 72px; border-radius: 16px;
       border: 2px solid var(--border); overflow: hidden; background: #222;
@@ -200,8 +202,8 @@
     .about-text { font-size: 0.92rem; line-height: 1.8; color: var(--muted); }
 
     /* ── CONTACT ── */
-    .contact-section { padding: 6rem 3rem; }
-    .contact-inner { max-width: 1200px; margin: 0 auto; }
+    .contact-section { }
+    .contact-inner { max-width: 1200px; margin: 0 auto; padding: 6rem 3rem; }
     .contact-title {
       font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 6vw, 4.5rem);
       letter-spacing: 0.04em; line-height: 1; margin-bottom: 0.8rem;
