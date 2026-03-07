@@ -135,6 +135,15 @@
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
     }
+    /* Solid strip that permanently covers the compositing seam */
+    .game-art::after {
+      content: '';
+      position: absolute; left: 0; right: 0; bottom: 0;
+      height: 4px;
+      background: var(--card);
+      z-index: 3;
+      pointer-events: none;
+    }
     .game-art img {
       display: block;
       width: 100%; height: 100%; object-fit: cover;
