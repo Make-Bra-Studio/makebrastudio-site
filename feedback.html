@@ -219,7 +219,6 @@
 
 <!-- MAIN -->
 <main>
-  <p class="page-eyebrow">Player Feedback</p>
   <h1 class="page-title">Tell Us<br>What You Think</h1>
   <p class="page-sub">Your feedback helps us make better games. Whether it's a bug, a suggestion, or just a kind word — we read every message.</p>
 
@@ -329,19 +328,48 @@
     if (match) sel.value = match.value;
   }
 
-  document.getElementById('submitBtn').addEventListener('click', function () {
+  document.getElementById('submitBtn').addEventListener('click', async function () {
+    const name    = document.getElementById('name').value.trim();
+    const email   = document.getElementById('email').value.trim();
     const game    = document.getElementById('game').value;
+    const type    = document.getElementById('type').value;
     const message = document.getElementById('message').value.trim();
     const rating  = document.querySelector('input[name="rating"]:checked');
 
-    // Simple validation
-    if (!game) { shake(document.getElementById('game')); return; }
+    if (!game)    { shake(document.getElementById('game'));    return; }
     if (!message) { shake(document.getElementById('message')); return; }
 
-    // In a real deployment, you'd POST to your backend here.
-    // For now we just show the success state.
-    const card = document.getElementById('formCard');
-    card.classList.add('submitted');
+    const btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    try {
+      const res = await fetch('https://formspree.io/f/xaqpygvv', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          name:    name    || 'Anonymous',
+          email:   email   || 'Not provided',
+          game,
+          type:    type    || 'Not specified',
+          rating:  rating  ? rating.value + ' stars' : 'Not rated',
+          message,
+        })
+      });
+
+      if (res.ok) {
+        document.getElementById('formCard').classList.add('submitted');
+      } else {
+        const data = await res.json();
+        alert('Something went wrong: ' + (data?.errors?.[0]?.message || 'Please try again.'));
+        btn.disabled = false;
+        btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send Feedback`;
+      }
+    } catch (err) {
+      alert('Network error. Please check your connection and try again.');
+      btn.disabled = false;
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send Feedback`;
+    }
   });
 
   function shake(el) {

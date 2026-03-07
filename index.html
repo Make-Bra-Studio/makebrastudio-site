@@ -132,13 +132,18 @@
       position: relative; height: 190px;
       overflow: hidden; background: #111;
       font-size: 0; line-height: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
     .game-art img {
       display: block;
       width: 100%; height: 100%; object-fit: cover;
       transition: transform 0.5s; filter: brightness(0.85);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform: translateZ(0);
     }
-    .game-card:hover .game-art img { transform: scale(1.05); filter: brightness(1); }
+    .game-card:hover .game-art img { transform: scale(1.05) translateZ(0); filter: brightness(1); }
 
     .game-art-overlay {
       position: absolute; inset: 0;
@@ -301,8 +306,7 @@
     <div class="game-card">
       <div class="game-art">
         <!-- First screenshot from Play Store screenshots section -->
-        <img src="https://play-lh.googleusercontent.com/Yb7sJnHKB2t8VJBkdxp-l5f9EqzXUBTjSoFJJGdRtx3bkPj3MZXHF2K_7pVqmYE3pA=w526-h296" alt="Junkyard Master"
-             onerror="this.src='https://play-lh.googleusercontent.com/UKmEpdPxZJE6k2gr2__5McfjyY-W3y1QtTd_oPNO8-xZjSWK0ijZ8J4BGM4zBou4uziP2UQ5ruBoDYlosl2s=w526-h296'" loading="lazy" />
+        <img src="https://play-lh.googleusercontent.com/4Ky9Q0TadNIIUAEKRg8EpogCCxIEJO4S_s8RONtZ0jFtmqpVfm7zo17P96yccYVhr712mFJqk-_Mb2j05nFr_Fo=w1280-h720-rw" alt="Junkyard Master" loading="lazy" />
         <div class="game-art-overlay"></div>
       </div>
       <div class="game-icon-wrap">
@@ -330,7 +334,7 @@
     <div class="game-card">
       <div class="game-art">
         <!-- First screenshot from Play Store screenshots section -->
-        <img src="https://play-lh.googleusercontent.com/t_4gK4UIJ0LinMIic7tB9UnGUu8ptbBwvRaEMsFfoTbEsbL-ngozAAW_q0ip94ReqW_gmK5kGZkqzXidDviCzQ=w526-h296" alt="Amaze Island Puzzle" loading="lazy" />
+        <img src="https://play-lh.googleusercontent.com/t_4gK4UIJ0LinMIic7tB9UnGUu8ptbBwvRaEMsFfoTbEsbL-ngozAAW_q0ip94ReqW_gmK5kGZkqzXidDviCzQ=w1280-h720-rw" alt="Amaze Island Puzzle" loading="lazy" />
         <div class="game-art-overlay"></div>
       </div>
       <div class="game-icon-wrap">
@@ -358,7 +362,7 @@
     <div class="game-card">
       <div class="game-art">
         <!-- First screenshot from Play Store screenshots section -->
-        <img src="https://play-lh.googleusercontent.com/BD1k_ZkTv-o-LYvwQo9BQX5FRezMdJr6Jl0M6Bnq_tL47qArCTc-iQWhAwwvwe-3VEQ=w526-h296" alt="2020 Apocalypse Puzzle Block" loading="lazy" />
+        <img src="https://play-lh.googleusercontent.com/2S-Q2dv5CT_0MbjsF-OJNZsezrgXgnB5BDM0osuOBiqECl181IWea7ccJU2Zotw8gXE72t9yjhi7Qq7Fp0m0BhU=w1280-h720-rw" alt="2020 Apocalypse Puzzle Block" loading="lazy" />
         <div class="game-art-overlay"></div>
       </div>
       <div class="game-icon-wrap">
