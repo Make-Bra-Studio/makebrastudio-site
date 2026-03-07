@@ -127,32 +127,17 @@
       box-shadow: 0 20px 60px rgba(245,200,66,0.12);
     }
 
-    /* FIX: prevent sub-pixel gap between image and content below */
     .game-art {
       position: relative; height: 190px;
       overflow: hidden; background: #111;
       font-size: 0; line-height: 0;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-    }
-    /* Solid strip that permanently covers the compositing seam */
-    .game-art::after {
-      content: '';
-      position: absolute; left: 0; right: 0; bottom: 0;
-      height: 4px;
-      background: var(--card);
-      z-index: 3;
-      pointer-events: none;
     }
     .game-art img {
       display: block;
       width: 100%; height: 100%; object-fit: cover;
       transition: transform 0.5s; filter: brightness(0.85);
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      transform: translateZ(0);
     }
-    .game-card:hover .game-art img { transform: scale(1.05) translateZ(0); filter: brightness(1); }
+    .game-card:hover .game-art img { transform: scale(1.05); filter: brightness(1); }
 
     .game-art-overlay {
       position: absolute; inset: 0;
@@ -160,8 +145,20 @@
       pointer-events: none;
     }
 
-    /* Negative margin bridges the sub-pixel gap between art and icon */
-    .game-icon-wrap { padding: 1.2rem 1.4rem 0; margin-top: -1px; }
+    /* The ::before lives OUTSIDE .game-art's compositing layer,
+       so it can paint over the sub-pixel seam Chrome creates at the
+       overflow:hidden boundary during translateY animation. */
+    .game-icon-wrap {
+      position: relative; z-index: 1;
+      padding: 1.2rem 1.4rem 0;
+    }
+    .game-icon-wrap::before {
+      content: '';
+      position: absolute; top: -3px; left: 0; right: 0;
+      height: 4px;
+      background: var(--card);
+      pointer-events: none;
+    }
     .game-icon {
       width: 72px; height: 72px; border-radius: 16px;
       border: 2px solid var(--border); overflow: hidden; background: #222;
@@ -208,12 +205,6 @@
     .game-link a:hover { opacity: 0.85; }
     .game-link svg { width: 14px; height: 14px; }
 
-    /* ── ABOUT ── */
-    .about-strip { background: var(--mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .about-inner { max-width: 1200px; margin: 0 auto; padding: 5rem 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
-    .about-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.2rem, 5vw, 3.8rem); letter-spacing: 0.04em; line-height: 1; }
-    .about-title em { color: var(--yellow); font-style: normal; }
-    .about-text { font-size: 0.92rem; line-height: 1.8; color: var(--muted); }
 
     /* ── CONTACT ── */
     .contact-section { }
@@ -258,7 +249,6 @@
       nav { padding: 1rem 1.5rem; }
       .nav-links { display: none; }
       .games-section, .contact-section { padding: 4rem 1.5rem; }
-      .about-inner { grid-template-columns: 1fr; gap: 2rem; }
       .footer-inner { flex-direction: column; gap: 1rem; text-align: center; }
     }
   </style>
@@ -398,17 +388,6 @@
   </div>
 </section>
 
-<!-- ABOUT -->
-<section class="about-strip">
-  <div class="about-inner">
-    <div>
-      <h2 class="about-title">Small studio.<br><em>Big ideas.</em></h2>
-    </div>
-    <div>
-      <p class="about-text">Make Bra Studio is an independent mobile game studio based in Kharkiv, Ukraine. We believe great puzzle and simulation games don't need complexity — they need heart, clever mechanics, and a world worth getting lost in. Every game we build is crafted with care, from first concept to final level.</p>
-    </div>
-  </div>
-</section>
 
 <!-- CONTACT -->
 <section class="contact-section" id="contact">
