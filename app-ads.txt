@@ -1,4 +1,4 @@
-OWNERDOMAIN=makebrastudio.eu.org
+OWNERDOMAIN=makebrastudio.com
 ironsrc.com, 640863, Direct
 
 google.com, pub-5782449081814912, DIRECT, f08c47fec0942fa0
