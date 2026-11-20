@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<!--
+  AppQuota's privacy policy. This one file is both the in-app copy (PrivacyPolicyActivity) and the page hosted at the
+  URL given in Play Console: upload it as it is, and upload it again whenever it changes. It loads nothing from the
+  network (the app has no internet access), so it keeps its styles inline. Keep it in step with docs/play/data-safety.md,
+  docs/play/accessibility-declaration.md, the in-app Accessibility disclosure and the merged manifest's permissions.
+  docs/play/release.md lists the requirements each section answers.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AppQuota privacy policy</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #F0F4F9;
+    --text: #1C2E45;
+    --muted: #5B697A;
+    --link: #4A6FA0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14212F;
+      --text: #E3EAF2;
+      --muted: #9FB0C2;
+      --link: #7FA0C9;
+    }
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  main {
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 24px 16px 40px;
+  }
+  h1 { font-size: 1.6rem; line-height: 1.25; margin: 0 0 4px; }
+  h2 { font-size: 1.15rem; margin: 28px 0 8px; }
+  p, ul { margin: 0 0 12px; }
+  ul { padding-left: 1.25rem; }
+  li { margin-bottom: 6px; }
+  a { color: var(--link); }
+  .date { color: var(--muted); margin-bottom: 20px; }
+</style>
+</head>
+<body>
+<main>
+<h1>AppQuota privacy policy</h1>
+<p class="date">Effective 18 November 2026</p>
+
+<p>AppQuota is an Android app by Make Bra Studio that limits the time you spend in the apps you choose. This policy
+explains what AppQuota reads on your phone, what it keeps and for how long, what it does not do, and what happens to an
+email you send us.</p>
+
+<h2>In short</h2>
+<ul>
+  <li>Everything AppQuota reads and keeps stays on your phone.</li>
+  <li>AppQuota has no internet access: it does not ask Android for the internet permission, so it cannot send
+    anything anywhere.</li>
+  <li>There is no account, no ads, no analytics and no tracking. AppQuota sends no data to us, Make Bra Studio, or to
+    anyone else.</li>
+  <li>The only personal data we ever receive is an email you choose to send us, and we use it only to answer you.</li>
+</ul>
+
+<h2>What AppQuota reads, and why</h2>
+<p><strong>Usage access.</strong> With your permission, AppQuota reads Android's app usage records: which app was in
+front, and when. It uses them to count the time you spend in the apps you track, and it keeps nothing about the apps
+you don't track.</p>
+<p><strong>Accessibility service.</strong> When you turn it on, AppQuota's Accessibility service sees which app is in
+front and which windows are on screen: the app each window belongs to, the type of window, and whether it is a
+picture-in-picture video. AppQuota uses this only to time the apps you track and to apply the limits you set:</p>
+<ul>
+  <li>it shows its delay or block screen over a tracked app;</li>
+  <li>it returns to the home screen when a blocked app stays open beside its block screen (split screen, floating
+    windows);</li>
+  <li>it closes a blocked app's picture-in-picture video, or brings the app back to full screen under the block
+    screen, and pauses its playback;</li>
+  <li>it shows short notices over other apps, such as the minutes you have left.</li>
+</ul>
+<p>The service does not read the text on your screen, what you type, your passwords or your notifications.</p>
+<p><strong>Your apps.</strong> AppQuota lists the apps on your phone that have an icon in the launcher, with their
+names and icons, so you can choose which ones to track. It also checks which app is your home screen, to tell it apart
+from other apps. Of this list, AppQuota keeps only the apps you choose to track.</p>
+
+<h2>What AppQuota keeps on your phone</h2>
+<ul>
+  <li>The time you spent in each app you track: when each session started and ended. It drives your limits and the
+    Stats screens.</li>
+  <li>The limits and rules you set for each tracked app, such as time caps, refills, delays and quiet hours.</li>
+  <li>Your Free Pass settings and when you used it.</li>
+  <li>The app's own settings, such as your daily reset time and how far you got through setup.</li>
+</ul>
+
+<h2>How long AppQuota keeps it</h2>
+<ul>
+  <li>AppQuota keeps your history for as long as it is installed, so the Stats screens can show past weeks. It does
+    not delete old entries on its own.</li>
+  <li>When you stop tracking an app, AppQuota stops recording it. The time already recorded stays until you clear
+    AppQuota's storage.</li>
+  <li>Clearing AppQuota's storage or uninstalling it deletes everything it kept (see "Your choices and rights").</li>
+</ul>
+
+<h2>How it is protected</h2>
+<ul>
+  <li>AppQuota keeps its data in its private app storage. Android's app sandbox stops other apps from reading it.</li>
+  <li>On phones that encrypt their storage, as most phones since Android 10 do, the data is encrypted with the rest of
+    the phone's storage.</li>
+  <li>Since the data never leaves your phone through AppQuota, it is never exposed in transit or on a server.</li>
+</ul>
+
+<h2>What AppQuota does not do</h2>
+<ul>
+  <li>It does not send your data off your phone, to us or to anyone else.</li>
+  <li>It does not share or sell data.</li>
+  <li>It contains no advertising, analytics, tracking or crash-reporting code, so no third party can collect data
+    through it. The only libraries in it are Google's AndroidX WorkManager, which runs its background checks, and
+    Material Components, which draws its screens. Neither sends data from AppQuota.</li>
+  <li>It does not track you across other apps or websites, so it does nothing different when your browser or phone
+    sends a "Do Not Track" signal.</li>
+  <li>It does not build a profile of you. It blocks an app only by the rules you set yourself.</li>
+</ul>
+
+<h2>Permissions</h2>
+<p>Google Play lists the permissions AppQuota asks for. This is what each one is for:</p>
+<ul>
+  <li><strong>Usage access:</strong> to count the time you spend in the apps you track (see above). You grant it in
+    your phone's settings, and you can take it back there at any time.</li>
+  <li><strong>Accessibility:</strong> for the Accessibility service described above. You turn it on in your phone's
+    Accessibility settings, after AppQuota shows you what it uses it for.</li>
+  <li><strong>Run at startup:</strong> so AppQuota's background check starts again after your phone restarts.</li>
+  <li><strong>Prevent phone from sleeping:</strong> so a background check can finish once it has started.</li>
+  <li><strong>View network connections:</strong> WorkManager, the library that runs those checks, asks for this
+    because it can wait for a network before a task. AppQuota's checks never wait for one, and AppQuota still has no
+    internet access.</li>
+</ul>
+
+<h2>Backup and moving to a new phone</h2>
+<p>AppQuota is left out of Android's backup to your Google account. When you set up a new phone by copying from your
+old one, Android may copy AppQuota's data straight to the new phone, so your limits and history come with you. You
+start that copy yourself, it runs between your own two phones, and the data never reaches us.</p>
+
+<h2>Google Play</h2>
+<p>When you install AppQuota from Google Play, Google handles the download and your Google account under
+<a href="https://policies.google.com/privacy">Google's privacy policy</a>. Google Play shows us statistics about
+AppQuota, such as how many people installed it, and crash reports from phones whose owners let Android share
+diagnostics with Google. These come from Google, not from AppQuota.</p>
+
+<h2>Emails you send us</h2>
+<p>If you email us, we receive your email address, your message and anything you attach. We use them only to answer you
+and to fix the problem you tell us about, never for marketing.</p>
+<ul>
+  <li>We keep a conversation for as long as we need it to help you, and delete it no later than one year after it
+    ends. You can ask us to delete it sooner.</li>
+  <li>Our email is Gmail, so Google stores these messages for us and may process them outside your country.</li>
+  <li>We do not pass them to anyone else unless the law requires us to.</li>
+  <li>If you are in the European Economic Area or the UK, our legal basis is our legitimate interest in answering
+    you (GDPR Article 6(1)(f)).</li>
+</ul>
+
+<h2>Your choices and rights</h2>
+<ul>
+  <li>You don't have to give us any personal data to use AppQuota.</li>
+  <li>You can turn off Usage access or AppQuota's Accessibility service at any time in your phone's settings.
+    AppQuota then stops timing or blocking apps.</li>
+  <li>To delete everything AppQuota keeps, open your phone's Settings › Apps › AppQuota › Storage and tap Clear
+    storage, or uninstall AppQuota.</li>
+  <li>Everything AppQuota keeps is on your phone and under your control, and we hold no copy of it, so there is
+    nothing for us to show you, correct or delete.</li>
+  <li>For any emails we hold, you can ask us to show them to you, correct them, delete them or stop using them,
+    where the law of your country gives you that right. Write to the address below and we will answer within 30
+    days.</li>
+  <li>You can also complain to the data protection authority of your country.</li>
+</ul>
+
+<h2>Children</h2>
+<p>AppQuota is not directed at children, and it collects no personal data from anyone. If you believe a child has
+emailed us personal information, tell us and we will delete it.</p>
+
+<h2>Changes to this policy</h2>
+<p>If AppQuota changes how it handles data, we will post the new policy at this address with a new effective date, and
+describe the change in the release notes of the app update that brings it. The policy in the app always matches the
+version of the app you have.</p>
+
+<h2>Contact</h2>
+<p>Make Bra Studio<br>
+<a href="mailto:makebra2020@gmail.com">makebra2020@gmail.com</a></p>
+</main>
+</body>
+</html>
